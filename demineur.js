@@ -273,20 +273,20 @@ class Demineur {
     decouvrir(x, y) {
         this.grille[x][y].estDecouvert = true;
         if (this.grille[x][y].value == 0) {
-            if ((x > 0) && (y > 0) && (this.grille[x - 1][y - 1].estDecouvert == true)) {
+            if ((x > 0) && (y > 0) && (this.grille[x - 1][y - 1].estDecouvert == false)) {
                 this.decouvrir(x - 1, y - 1);
             }
             if ((x > 0) && (this.grille[x - 1][y].estDecouvert == false)) {
                 this.decouvrir(x - 1, y);
             }
-            if ((x > 0) && (y < this.tailleGrille - 1) && (this.grille[x][y].estDecouvert == false)) {
-                this.decouvrir(x - 1, y);
+            if ((x > 0) && (y < this.tailleGrille - 1) && (this.grille[x - 1][y + 1].estDecouvert == false)) {
+                this.decouvrir(x - 1, y + 1);
             }
             if ((y < this.tailleGrille - 1) && (this.grille[x][y + 1].estDecouvert == false)) {
                 this.decouvrir(x, y + 1);
             }
             if ((x < this.tailleGrille - 1) && (y < this.tailleGrille - 1) && (this.grille[x + 1][y + 1].estDecouvert == false)) {
-                this.decouvrir(x + 1, y);
+                this.decouvrir(x + 1, y + 1);
             }
             if ((x < this.tailleGrille - 1) && (this.grille[x + 1][y].estDecouvert == false)) {
                 this.decouvrir(x + 1, y);
@@ -407,3 +407,5 @@ function play() {
 }
 
 play();
+
+
