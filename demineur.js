@@ -269,6 +269,7 @@ class Demineur {
         }
     }
 
+    //Récursif ne dévoile pas les angles de certains 0 à fix !
     decouvrir(x, y) {
         this.grille[x][y].estDecouvert = true;
         if (this.grille[x][y].value == 0) {
@@ -306,19 +307,17 @@ class Demineur {
         } else {
             if (this.grille[x][y].estFlag == true) {
                 console.log("Cette cellule est déjà marqué. Voulez vous la démarquer ? (1 : oui; 2 : non)");
-                var answer = scanf('%d');
-                /* while (answer != 0 || answer != 1) {
-                     answer = scanf('%d');
-                 }*/
+                while (!((answer == 1) || (answer == 2))) {
+                    var answer = scanf('%d');
+                }
                 if (answer == 1) {
                     this.grille[x][y].estFlag = false;
                 }
             } else {
                 console.log("Voulez-vous marquer cette cellule ? (1 : oui; 2 : non)");
-                var answer = scanf('%d');
-                /* while (answer != 0 || answer != 1) {
-                     answer = scanf('%d');
-                 }*/
+                while (!((answer == 1) || (answer == 2))) {
+                    var answer = scanf('%d');
+                }
                 if (answer == 1) {
                     this.grille[x][y].estFlag = true;
                 }
@@ -359,9 +358,15 @@ function play() {
             if (choixAction == 1) {
                 console.log("Choisissez la cellule à cliquer : ");
                 console.log(`X (de 0 à ${demineur.tailleGrille - 1}) = `);
-                var abscisse = scanf('%d');
+                var abscisse = demineur.tailleGrille + 1;
+                while (!((abscisse >= 0) && (abscisse < demineur.tailleGrille))) {
+                    abscisse = scanf('%d');
+                }
                 console.log(`Y (de 0 à ${demineur.tailleGrille - 1}) = `);
-                var ordonnee = scanf('%d');
+                var ordonnee = demineur.tailleGrille + 1;
+                while (!((ordonnee >= 0) && (ordonnee < demineur.tailleGrille))) {
+                    ordonnee = scanf('%d');
+                }
                 let test = demineur.click(abscisse, ordonnee);
                 if (test == true) {
                     perdu = true;
@@ -369,9 +374,15 @@ function play() {
             } else if (choixAction == 2) {
                 console.log("Choisissez la cellule à marquer : ");
                 console.log(`X (de 0 à ${demineur.tailleGrille - 1}) = `);
-                var abscisse = scanf('%d');
+                var abscisse = demineur.tailleGrille + 1;
+                while (!((abscisse >= 0) && (abscisse < demineur.tailleGrille))) {
+                    abscisse = scanf('%d');
+                }
                 console.log(`Y (de 0 à ${demineur.tailleGrille - 1}) = `);
-                var ordonnee = scanf('%d');
+                var ordonnee = demineur.tailleGrille + 1;
+                while (!((ordonnee >= 0) && (ordonnee < demineur.tailleGrille))) {
+                    ordonnee = scanf('%d');
+                }
                 demineur.flag(abscisse, ordonnee);
             }
         }

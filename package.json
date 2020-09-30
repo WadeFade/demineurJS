@@ -1,0 +1,16 @@
+{
+    "name": "demineur",
+    "version": "1.0.0",
+    "description": "Jeu du démineur",
+    "main": "demineur.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "run": "node ./demineur.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "scanf": "^1.1.2"
+    }
+}
