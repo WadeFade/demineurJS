@@ -9,10 +9,6 @@ var grid = [
     [0, 0, 0, 0, 0]
 ];
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-};
-
 class Cellule {
     constructor() {
         this.estDecouvert = false;
@@ -40,7 +36,9 @@ class Demineur {
 
         this.tailleGrille = tailleChoisi; //difficulte * 5;
         this.nombreMines = Math.round((this.tailleGrille * this.tailleGrille) / 10);
+        this.counterNombres = (this.tailleGrille * this.tailleGrille) - this.nombreMines;
 
+        //Création de la grille & instanciations de Nombres dans les cases avec valeur par défaut à 0.
         this.grille = new Array(this.tailleGrille);
         for (var x = 0; x < this.tailleGrille; x++) {
             this.grille[x] = new Array(this.tailleGrille);
@@ -49,6 +47,7 @@ class Demineur {
             }
         }
 
+        //Génération aléatoire de posX et posY, pour placer les mines de façon aléatoire dans la grille (seulement si la cellule n'était pas une mine).
         var posX = 0;
         var posY = 0;
         let counter = this.nombreMines;
@@ -61,6 +60,7 @@ class Demineur {
             }
         }
 
+        //Permet de compter les mines autour d'une cellule quand celle-ci est un Nombre.
         for (var x = 0; x < this.tailleGrille; x++) {
             for (var y = 0; y < this.tailleGrille; y++) {
                 if (this.grille[x][y] instanceof Nombre) {
@@ -70,9 +70,10 @@ class Demineur {
                 }
             }
         }
-    }
+    };
 
     //À factoriser !!!
+    //Fonction checkMineArround (permet de compter le nombre de mine autour d'une cellule pour lui attribué ça valeur.)
     checkMineArround(posX, posY, valeurMin, valeurMax) {
         var mines = 0;
         if (posX == valeurMin) {
@@ -214,6 +215,7 @@ class Demineur {
         return mines;
     };
 
+    //Fonction display (permet d'afficher dans le terminal la grille de notre demineur, en fonction des objets des cellules et de leurs états)
     display() {
         var toDisplay = "";
         for (var y = 0; y < this.tailleGrille; y++) {
@@ -240,6 +242,7 @@ class Demineur {
         console.log(toDisplay);
     };
 
+    //Fonction reveal (permet de démarquer et de découvrir toutes les cellules, fonction utilisée quand le joueur perd)
     reveal() {
         for (var x = 0; x < this.tailleGrille; x++) {
             for (var y = 0; y < this.tailleGrille; y++) {
@@ -247,31 +250,39 @@ class Demineur {
                 this.grille[x][y].estDecouvert = true;
             }
         }
-    }
+    };
 
+    //Fonction click (une cellule peut être cliqué si elle n'est pas marquer et si elle n'est pas déjà découverte)
     click(x, y) {
-        var perdu = false;
-        if (this.grille[x][y].estFlag == true) {
-            console.log("Vous ne pouvez pas cliquer sur une cellule marqué. Veuillez la démarquer avant de cliquer.");
-            scanf('%s');
-            return 0;
-        } else if (this.grille[x][y].estDecouvert == true) {
-            console.log("Cette cellule est déjà découverte.");
-            scanf('%s');
-            return 0;
-        } else {
+        var etat = 0;
+        if (!((this.grille[x][y].estFlag == true) && (this.grille[x][y].estDecouvert == true))) {
             if (this.grille[x][y] instanceof Mine) {
-                perdu = true;
-                return perdu;
+                etat = 1;
             } else if (this.grille[x][y] instanceof Nombre) {
-                this.decouvrir(x, y);
+                var test = this.decouvrir(x, y);
+                if (test == true) {
+                    etat = 2;
+                }
             }
         }
-    }
+        return etat;
+    };
 
-    //Récursif ne dévoile pas les angles de certains 0 à fix !
+    //Fonction flag (pour marquer une cellule qui n'est pas déjà découverte)
+    flag(x, y) {
+        if (!(this.grille[x][y].estDecouvert == true)) {
+            if (this.grille[x][y].estFlag == true) {
+                this.grille[x][y].estFlag = false;
+            } else {
+                this.grille[x][y].estFlag = true;
+            }
+        }
+    };
+
+
     decouvrir(x, y) {
         this.grille[x][y].estDecouvert = true;
+        this.counterNombres--;
         if (this.grille[x][y].value == 0) {
             if ((x > 0) && (y > 0) && (this.grille[x - 1][y - 1].estDecouvert == false)) {
                 this.decouvrir(x - 1, y - 1);
@@ -298,34 +309,18 @@ class Demineur {
                 this.decouvrir(x, y - 1);
             }
         }
-        return 0;
-    }
-
-    flag(x, y) {
-        if (this.grille[x][y].estDecouvert == true) {
-            console.log("Vous ne pouvez pas marquer une cellule découverte.");
+        if (this.counterNombres > 0) {
+            return 0;
         } else {
-            if (this.grille[x][y].estFlag == true) {
-                console.log("Cette cellule est déjà marqué. Voulez vous la démarquer ? (1 : oui; 2 : non)");
-                while (!((answer == 1) || (answer == 2))) {
-                    var answer = scanf('%d');
-                }
-                if (answer == 1) {
-                    this.grille[x][y].estFlag = false;
-                }
-            } else {
-                console.log("Voulez-vous marquer cette cellule ? (1 : oui; 2 : non)");
-                while (!((answer == 1) || (answer == 2))) {
-                    var answer = scanf('%d');
-                }
-                if (answer == 1) {
-                    this.grille[x][y].estFlag = true;
-                }
-            }
+            return true;
         }
     };
 }
 
+//Fonction getRandomInt (permet de générer une valeur comprise entre la taille mini de la grille (0) et la taille max (this.tailleGrille-1)).
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+};
 
 function play() {
     console.log("Jeu du démineur (par WadeFade)");
@@ -343,8 +338,9 @@ function play() {
             var tailleChoisi = scanf('%d');
         }
         var demineur = new Demineur(tailleChoisi);
+        var gagne = false;
         var perdu = false;
-        while (jouer == 1 && perdu == false) {
+        while (jouer == 1 && perdu == false && gagne == false) {
             console.clear();
             console.log("Jeu du démineur (par WadeFade)");
             console.log("À vous de jouer ! =)");
@@ -368,8 +364,10 @@ function play() {
                     ordonnee = scanf('%d');
                 }
                 let test = demineur.click(abscisse, ordonnee);
-                if (test == true) {
+                if (test == 1) {
                     perdu = true;
+                } else if (test == 2) {
+                    gagne = true
                 }
             } else if (choixAction == 2) {
                 console.log("Choisissez la cellule à marquer : ");
@@ -393,15 +391,18 @@ function play() {
             demineur.reveal();
             demineur.display();
             console.log("Vous avez perdu :(");
-            scanf('%s');
+            return 0;
+        } else if (gagne == true) {
             console.clear();
+            console.log("Jeu du démineur (par WadeFade)");
+            console.log(`Nombre de mines : ${demineur.nombreMines}`);
+            demineur.display();
+            console.log("Vous avez gagné ! Félicitations !");
             return 0;
         }
     } else if (jouer == 2) {
         console.clear();
         console.log("À bientôt ! =)");
-        scanf('%s');
-        console.clear();
         return 0;
     }
 }
