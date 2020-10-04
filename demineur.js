@@ -72,9 +72,7 @@ class Demineur {
         }
     };
 
-    //À factoriser !!!
     //Fonction checkMineArround (permet de compter le nombre de mine autour d'une cellule pour lui attribué ça valeur.)
-
     checkMineArround(x, y) {
         var mines = 0;
         if ((x > 0) && (y > 0) && (this.grille[x - 1][y - 1] instanceof Mine)) {
