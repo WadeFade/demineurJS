@@ -64,7 +64,7 @@ class Demineur {
         for (var x = 0; x < this.tailleGrille; x++) {
             for (var y = 0; y < this.tailleGrille; y++) {
                 if (this.grille[x][y] instanceof Nombre) {
-                    this.grille[x][y].value = this.checkMineArround(x, y, 0, this.tailleGrille);
+                    this.grille[x][y].value = this.checkMineArround(x, y);
                 } else {
 
                 }
@@ -74,143 +74,32 @@ class Demineur {
 
     //À factoriser !!!
     //Fonction checkMineArround (permet de compter le nombre de mine autour d'une cellule pour lui attribué ça valeur.)
-    checkMineArround(posX, posY, valeurMin, valeurMax) {
+
+    checkMineArround(x, y) {
         var mines = 0;
-        if (posX == valeurMin) {
-            if (posY == valeurMin) {
-                if (this.grille[posX][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY] instanceof Mine) {
-                    mines++;
-                }
-            } else if (posY > valeurMin && posY < valeurMax - 1) {
-                if (this.grille[posX][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-            } else if (posY == valeurMax - 1) {
-                if (this.grille[posX + 1][posY] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-            }
-        } else if (posX > valeurMin && posX < valeurMax - 1) {
-            if (posY == valeurMin) {
-                if (this.grille[posX - 1][posY] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY] instanceof Mine) {
-                    mines++;
-                }
-            } else if (posY > valeurMin && posY < valeurMax - 1) {
-                if (this.grille[posX - 1][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-            } else if (posY == valeurMax - 1) {
-                if (this.grille[posX + 1][posY] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX + 1][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY] instanceof Mine) {
-                    mines++;
-                }
-            }
-        } else if (posX == valeurMax - 1) {
-            if (posY == valeurMin) {
-                if (this.grille[posX - 1][posY] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-            } else if (posY > valeurMin && posY < valeurMax - 1) {
-                if (this.grille[posX][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX][posY + 1] instanceof Mine) {
-                    mines++;
-                }
-            } else if (posY == valeurMax - 1) {
-                if (this.grille[posX][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY - 1] instanceof Mine) {
-                    mines++;
-                }
-                if (this.grille[posX - 1][posY] instanceof Mine) {
-                    mines++;
-                }
-            }
+        if ((x > 0) && (y > 0) && (this.grille[x - 1][y - 1] instanceof Mine)) {
+            mines++;
+        }
+        if ((x > 0) && (this.grille[x - 1][y] instanceof Mine)) {
+            mines++;
+        }
+        if ((x > 0) && (y < this.tailleGrille - 1) && (this.grille[x - 1][y + 1] instanceof Mine)) {
+            mines++;
+        }
+        if ((y < this.tailleGrille - 1) && (this.grille[x][y + 1] instanceof Mine)) {
+            mines++;
+        }
+        if ((x < this.tailleGrille - 1) && (y < this.tailleGrille - 1) && (this.grille[x + 1][y + 1] instanceof Mine)) {
+            mines++;
+        }
+        if ((x < this.tailleGrille - 1) && (this.grille[x + 1][y] instanceof Mine)) {
+            mines++;
+        }
+        if ((x < this.tailleGrille - 1) && (y > 0) && (this.grille[x + 1][y - 1] instanceof Mine)) {
+            mines++;
+        }
+        if ((y > 0) && (this.grille[x][y - 1] instanceof Mine)) {
+            mines++;
         }
         return mines;
     };
@@ -255,7 +144,7 @@ class Demineur {
     //Fonction click (une cellule peut être cliqué si elle n'est pas marquer et si elle n'est pas déjà découverte)
     click(x, y) {
         var etat = 0;
-        if (!((this.grille[x][y].estFlag == true) && (this.grille[x][y].estDecouvert == true))) {
+        if (!((this.grille[x][y].estFlag == true) || (this.grille[x][y].estDecouvert == true))) {
             if (this.grille[x][y] instanceof Mine) {
                 etat = 1;
             } else if (this.grille[x][y] instanceof Nombre) {
@@ -279,7 +168,7 @@ class Demineur {
         }
     };
 
-
+    //Fonction pour la découverte récursive des cases.
     decouvrir(x, y) {
         this.grille[x][y].estDecouvert = true;
         this.counterNombres--;
@@ -322,6 +211,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 };
 
+//Fonction qui permet de lancer le jeu. Avec condition de victoire et de défaite.
 function play() {
     console.log("Jeu du démineur (par WadeFade)");
     console.log("Voulez-vous jouer ? (1 : oui; 2 : non)");
@@ -345,6 +235,7 @@ function play() {
             console.log("Jeu du démineur (par WadeFade)");
             console.log("À vous de jouer ! =)");
             console.log(`Nombre de mines : ${demineur.nombreMines}`);
+            console.log(`Cases restantes à découvrir pour gagner : ${demineur.counterNombres}`);
             demineur.display();
             console.log('Que voulez-vous faire ? (1 : cliquer; 2 : marquer)');
             var choixAction = 0;
@@ -408,5 +299,3 @@ function play() {
 }
 
 play();
-
-
